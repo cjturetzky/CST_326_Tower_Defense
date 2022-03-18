@@ -14,6 +14,7 @@ public class EnemyDemo : MonoBehaviour
     public List<Transform> waypointList;
 
     private int targetWaypointIndex;
+    private bool enemyDied = false;
 
     public delegate void EnemyDied(EnemyDemo deadEnemy);
     public event EnemyDied OnEnemyDied;
@@ -44,9 +45,9 @@ public class EnemyDemo : MonoBehaviour
             TargetNextWaypoint();
         }
 
-        bool enemyDied = false;
         if(enemyDied){
             OnEnemyDied?.Invoke(this);
+            Destroy(this.gameObject);
         }
     }
 
@@ -59,6 +60,14 @@ public class EnemyDemo : MonoBehaviour
         }
         else{
             targetWaypointIndex++;
+        }
+    }
+
+    public void clicked(){
+        health--;
+        Debug.Log("Ouch!");
+        if(health == 0){
+            enemyDied = true;
         }
     }
 }
