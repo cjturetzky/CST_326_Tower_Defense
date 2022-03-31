@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class NavEnemyScript : MonoBehaviour
 {
     public int hp = 3;
+    public int maxHp = 3;
     public int coinReward = 2;
 
     public Transform target;
 
     public delegate void EnemyDied(NavEnemyScript deadEnemy);
     public event EnemyDied OnEnemyDied;
+
+    public Image healthImage;
+    public Vector3 offset;
+
+    bool enemyDied = false;
     // Start is called before the first frame update
 
     private NavMeshAgent agent;
@@ -24,18 +31,31 @@ public class NavEnemyScript : MonoBehaviour
     void Update()
     {
         Vector3 meshPosition = GetNavmeshPosition(target.position);
-        // agent.SetDestination(meshPosition);
+        agent.SetDestination(meshPosition);
+        moveImage();
 
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            Ray pickRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(pickRay, out RaycastHit hitInfo)){
-                agent.SetDestination(hitInfo.point);
-            }
+        if(enemyDied){
+            OnEnemyDied?.Invoke(this);
+            Destroy(this.gameObject);
         }
+
     }
 
     Vector3 GetNavmeshPosition(Vector3 samplePosition){
         NavMesh.SamplePosition(samplePosition, out NavMeshHit hitInfo, 100f, -1);
         return hitInfo.position;
+    }
+
+    public void clicked(){
+        hp--;
+        Debug.Log("Ouch!");
+        if(hp == 0){
+            enemyDied = true;
+        }
+    }
+
+    void moveImage(){
+        healthImage.transform.position = Camera.main.WorldToScreenPoint(transform.position + offset);
+        healthImage.fillAmount = (float) hp/maxHp;
     }
 }

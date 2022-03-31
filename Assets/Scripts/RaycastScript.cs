@@ -9,7 +9,7 @@ public class RaycastScript : MonoBehaviour
     private int coins = 0;
 
     void Start(){
-        foreach (EnemyDemo e in FindObjectsOfType<EnemyDemo>()){
+        foreach (NavEnemyScript e in FindObjectsOfType<NavEnemyScript>()){
             e.OnEnemyDied += EnemyDied;
         }
     }
@@ -21,15 +21,18 @@ public class RaycastScript : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
             if (Physics.Raycast(ray, out RaycastHit hit)) {    
                 Debug.Log($"You have clicked {hit.transform.name}");
-                if(hit.transform.name == "Enemy"){
-                    hit.transform.GetComponent<EnemyDemo>().clicked();
+                if(hit.transform.name == "NavEnemy"){
+                    hit.transform.GetComponent<NavEnemyScript>().clicked();
+                }
+                if(hit.transform.name == "Building"){
+                    hit.transform.GetComponent<BuildingBehavior>().Build();
                 }
             }  
         } 
     }
 
-    private void EnemyDied(EnemyDemo deadEnemy){
-        coins++;
+    private void EnemyDied(NavEnemyScript deadEnemy){
+        coins += deadEnemy.coinReward;
         coinText.SetText($"Coins: {coins}");
     }
 }
