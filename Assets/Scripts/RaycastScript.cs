@@ -6,12 +6,13 @@ using TMPro;
 public class RaycastScript : MonoBehaviour
 {
     public TextMeshProUGUI coinText;
-    private int coins = 0;
+    private int coins = 1;
 
     void Start(){
         foreach (NavEnemyScript e in FindObjectsOfType<NavEnemyScript>()){
             e.OnEnemyDied += EnemyDied;
         }
+        coinText.SetText($"Coins: {coins}");
     }
 
     // Update is called once per frame
@@ -24,15 +25,22 @@ public class RaycastScript : MonoBehaviour
                 if(hit.transform.name == "NavEnemy"){
                     hit.transform.GetComponent<NavEnemyScript>().clicked();
                 }
-                if(hit.transform.name == "Building"){
-                    hit.transform.GetComponent<BuildingBehavior>().Build();
+                if(hit.transform.gameObject.tag == "Building"){
+                    if(coins > 0){
+                        changeCoins(-1);
+                        hit.transform.GetComponent<BuildingBehavior>().Build();
+                    }
                 }
             }  
         } 
     }
 
     private void EnemyDied(NavEnemyScript deadEnemy){
-        coins += deadEnemy.coinReward;
+        changeCoins(deadEnemy.coinReward);
+    }
+
+    private void changeCoins(int amount){
+        coins += amount;
         coinText.SetText($"Coins: {coins}");
     }
 }

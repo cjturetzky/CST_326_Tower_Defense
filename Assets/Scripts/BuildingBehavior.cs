@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuildingBehavior : MonoBehaviour
 {
+    public GameObject towerPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,5 +19,9 @@ public class BuildingBehavior : MonoBehaviour
 
     public void Build(){
         Debug.Log("Building!");
+        GameObject tower = Instantiate(towerPrefab);
+        tower.transform.position = transform.position;
+        tower.transform.rotation = transform.rotation;
+        Destroy(this.gameObject);
     }
 }
