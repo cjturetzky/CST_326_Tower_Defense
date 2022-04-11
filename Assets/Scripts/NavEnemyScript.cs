@@ -15,7 +15,7 @@ public class NavEnemyScript : MonoBehaviour
     public delegate void EnemyDied(NavEnemyScript deadEnemy);
     public event EnemyDied OnEnemyDied;
 
-    public Image healthImage;
+    //public Image healthImage;
     public Vector3 offset;
 
     bool enemyDied = false;
@@ -32,8 +32,12 @@ public class NavEnemyScript : MonoBehaviour
     {
         Vector3 meshPosition = GetNavmeshPosition(target.position);
         agent.SetDestination(meshPosition);
-        moveImage();
+        //moveImage();
 
+        if(Vector3.Distance(meshPosition, transform.position) < 0.2){
+            Debug.Log("Enemy made it to the end. Game over.");
+            FindObjectOfType<RaycastScript>().Lose();
+        }
         if(enemyDied){
             OnEnemyDied?.Invoke(this);
             Destroy(this.gameObject);
@@ -54,8 +58,13 @@ public class NavEnemyScript : MonoBehaviour
         }
     }
 
-    void moveImage(){
-        healthImage.transform.position = Camera.main.WorldToScreenPoint(transform.position + offset);
-        healthImage.fillAmount = (float) hp/maxHp;
+    // void moveImage(){
+    //     healthImage.transform.position = Camera.main.WorldToScreenPoint(transform.position + offset);
+    //     healthImage.fillAmount = (float) hp/maxHp;
+    // }
+
+    void OnTriggerEnter(Collider col){
+        Debug.Log(col.gameObject);
+        clicked();
     }
 }
