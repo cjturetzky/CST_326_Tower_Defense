@@ -29,6 +29,7 @@ public class BulletBehavior : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider col){
+        Debug.Log(col.gameObject);
         if(col.tag != "Building"){
             Destroy(this.gameObject);
         }

@@ -34,7 +34,8 @@ public class NavEnemyScript : MonoBehaviour
         agent.SetDestination(meshPosition);
         //moveImage();
 
-        if(Vector3.Distance(meshPosition, transform.position) < 0.2){
+        // Debug.Log(Vector3.Distance(target.position, transform.position));
+        if(Vector3.Distance(target.position, transform.position) < 1){
             Debug.Log("Enemy made it to the end. Game over.");
             FindObjectOfType<RaycastScript>().Lose();
         }

@@ -40,6 +40,7 @@ public class TowerBehavior : MonoBehaviour
             timeSinceLastShot = 0.0f;
             GameObject firedBullet = Instantiate(bullet);
             firedBullet.GetComponent<BulletBehavior>().target = target;
+            firedBullet.transform.position = transform.position;
             if(Vector3.Distance(target.transform.position, transform.position) > maxRange){
                 target = null;
             }
